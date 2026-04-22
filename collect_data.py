@@ -9,7 +9,7 @@ import csv, time, os
 os.makedirs("frames", exist_ok=True)
 
 # Creates BeamNGy object that connects to beamng.
-connection_object = BeamNGpy(host='localhost', port=64256, home="insert file path")
+connection_object = BeamNGpy(host='localhost', port=64256, home='C:/BeamNG.tech.v0.38.5.0/BeamNG.tech.v0.38.5.0')
 
 # Creates Scenario object that loads Hirochi Raceway
 scenario = Scenario(level="hirochi_raceway", name="test1")
@@ -21,15 +21,21 @@ electrics = Electrics()
 car.sensors.attach("electrics", electrics)
 
 # Sets car on the racetrack
-scenario.add_vehicle(car, pos=(0,0,0), rot_quat=(0, 0, 0, 1))
+scenario.add_vehicle(car, pos=(-408.48, 260.23, 25.14), rot_quat=(0, 0, -0.2799, 0.9600))
 
 
 with connection_object.open() as bng:
+    try:
+        bng.scenario.stop()
+    except:
+        pass
+    scenario.make(bng)
     bng.scenario.load(scenario)
     bng.scenario.start()
+    time.sleep(10)  # wait for camera to initialize
 
     camera = Camera("camera", bng, car)
-    car.sensors.attach("camera", camera)
+   
 
 
     with open('raw_data.csv', 'w', newline='') as f:
@@ -41,10 +47,19 @@ with connection_object.open() as bng:
         # Loop pulls data 10 times per second and writes it to the raw csv file.
         for i in range(500):
             car.sensors.poll()
+            
+            # Creates a unique file name for image frames
             frame_filename = f"frames/frame_{i:04d}.png"
+            
+            # Pulls image frame and stores it in "camera_data"
             camera_data = camera.poll()
-            image = Image.fromarray(camera_data['colour'])
-            image.save(frame_filename)
+
+            # Checks to see if there is a frame to save.
+            if camera_data['colour'] is None: 
+                continue
+
+            camera_data['colour'].save(frame_filename)
+
             speed = electrics.data.get("wheelspeed",0)
             steering = electrics.data.get("steering", 0)
             throttle = electrics.data.get("throttle", 0)
