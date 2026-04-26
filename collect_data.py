@@ -1,11 +1,12 @@
+"""
+Data collection script for the self-driving project.
+Connects to BeamNG, drives the SBR car around Hirochi Raceway with the AI driver,
+logs road sensor and electrics data to raw_data.csv for downstream training.
+"""
+
 from beamngpy import BeamNGpy, Vehicle, Scenario
 from beamngpy.sensors import Electrics, RoadsSensor
 import csv, time, argparse
-
- 
-# Data collection script for the self-driving project.
-# Connects to BeamNG, drives the SBR car around Hirochi Raceway with the AI driver,
-# logs road sensor and electrics data to raw_data.csv for downstream training.
 
 from environment_task_setup import (
     TRACK_LEVEL,
@@ -55,15 +56,19 @@ if __name__ == "__main__":
         scenario.make(bng)
         bng.scenario.load(scenario)
         bng.scenario.start()
-        time.sleep(args.startup_delay)  # wait for road sensor to initialize
+
+        time.sleep(args.startup_delay)  # let the simulator finish spinning up rendering/physics
+
+        # Create sensor BEFORE AI setup so it registers cleanly with the vehicle.
+        # Don't call car.connect(bng) — scenario.start() already handles vehicle connection,
+        # and calling connect manually triggers a reconnect that orphans sensors.
+        roads_sensor = RoadsSensor("roads1", bng, car, is_send_immediately=True, is_visualised=True)
+        time.sleep(1)  # give sensor time to fully register on VE side
 
         # Sets up an AI driver to drive the track for training
         car.ai.set_mode(args.ai_mode)
-
-        # Instantiates RoadSensor inside the with because it requires an active
-        # connection to beamNG to be passed in.
-        roads_sensor = RoadsSensor("roads1", bng, car)
-        print("First poll result:", roads_sensor.poll())
+        car.ai.set_aggression(0.7)
+        car.ai.set_speed(15, mode="set")
 
         print("Scenario started. Beginning frame capture...")
         print(f"Obstacles enabled: {args.with_obstacles}")
@@ -91,7 +96,7 @@ if __name__ == "__main__":
                     print(f"Sensor poll error at frame {i}: {e}")
                     time.sleep(0.2)
                     continue
-
+                    
 
                 # Pulls road sensor and stores it in "roads_data"
                 try:
@@ -101,11 +106,15 @@ if __name__ == "__main__":
                     time.sleep(0.2)
                     continue
 
+                
+                if not isinstance(roads_data, dict) or not roads_data:
+                    print(f"Skipping frame {i}, no road data yet")
+                    time.sleep(0.1)
+                    continue
 
-                latest = roads_data[max(roads_data.keys())]  # newest timestamp
-                distFromCenter = latest.get("dist2CL", 0)
-                headingAngle = latest.get("headingAngle", 0)
-                radius = latest.get("roadRadius", 0)
+                distFromCenter = roads_data.get("dist2CL", 0)
+                headingAngle = roads_data.get("headingAngle", 0)
+                radius = roads_data.get("roadRadius", 0)
                 
                 #  Handle straight roads (NaN) and missing data (0) — both mean curvature 0.
                 if radius == 0 or radius != radius:
@@ -114,11 +123,11 @@ if __name__ == "__main__":
                     curvature = 1 / radius
 
                 # BeamNG returns half-width (center to edge); double it for full road width.
-                roadWidth = 2 * latest.get("halfWidth", 0)
-                drivability = latest.get("drivability", 0)
+                roadWidth = 2 * roads_data.get("halfWidth", 0)
+                drivability = roads_data.get("drivability", 0)
 
                 Speed = electrics.data.get("wheelspeed", 0)
-                Steering = electrics.data.get("steering", 0)
+                Steering = electrics.data.get("steering_input", 0)
                 Throttle = electrics.data.get("throttle", 0)
                 Brake = electrics.data.get("brake", 0)
                 writer.writerow([distFromCenter, headingAngle, curvature, roadWidth, drivability, Speed, Steering, Throttle, Brake])
