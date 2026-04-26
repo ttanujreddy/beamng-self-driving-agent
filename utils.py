@@ -6,7 +6,7 @@ from torchvision import transforms
 
 class DrivingDataset(Dataset):
     """
-    X = distFromCenter, headingAngle, xCurvature, yCurvature, roadWidth, drivability
+    X = distFromCenter, headingAngle, curvature, roadWidth, drivability, Speed
     y = steering, throttle, brake
     """
     def __init__(self, df: pd.DataFrame):
@@ -21,10 +21,10 @@ class DrivingDataset(Dataset):
         X = torch.tensor([
             row["distFromCenter"],
             row["headingAngle"],
-            row["xCurvature"],
-            row["yCurvature"],
+            row["curvature"],
             row["roadWidth"],
-            row["drivability"]
+            row["drivability"],
+            row["Speed"]
         ])
 
         y = torch.tensor([
