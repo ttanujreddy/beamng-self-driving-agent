@@ -1,9 +1,9 @@
 {
     "beamng-host": "localhost",
     "beamng-port": 64256,
-    "beamng-path": "dummy",
+    "beamng-path": "C:/BeamNG.tech.v0.38.5.0",
 
-    "scenario-track": "hiroichi_raceway",
+    "scenario-level": "hirochi_raceway",
     "scenario-name": "cs450_environment_test",
 
     "vehicle-name": "vehicle",

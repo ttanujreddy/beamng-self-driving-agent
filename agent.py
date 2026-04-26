@@ -5,12 +5,14 @@ from beamngpy.sensors import Electrics, RoadsSensor
 import json
 import csv, time, os
 
-def run_cycle(bng: BeamNGpy, vehicle: Vehicle, rs: RoadsSensor):
+def update(bng: BeamNGpy, vehicle: Vehicle, rs: RoadsSensor):
     bng.control.step(10)
 
-    roads_data = rs.poll()
+    raw_roads_data = rs.poll()
+    roads_data = raw_roads_data[0]
+    inputs = [roads_data["dist2CL"], roads_data["headingAngle"], roads_data["roadRadius"], roads_data["halfWidth"], roads_data["drivability"]]
+    print(inputs)
 
-    # TODO: Figure out what format to send the data in
     # Input format notes from Matt:
     # DistFromCenter — distance from lane centerline, scaled to [-1, 1]
     # HeadingAngle — car angle vs road direction, scaled to [-1, 1]
@@ -19,10 +21,10 @@ def run_cycle(bng: BeamNGpy, vehicle: Vehicle, rs: RoadsSensor):
     # Drivability — already 0-1 from BeamNG
 
     # Send data to model, recieve output here
+    # TODO: When model is ready, uncomment the line below and delete everything dummynet related
     ## output = model.forward(roads_data)
-    output = dummynet.predict(roads_data)
+    output = dummynet.predict(inputs)
 
-    # TODO: Figure out how the data is being recieved
     # Output format notes from Matt:
     # Steering ∈ [-1, 1] (raw, not normalized — 0 means straight)
     # Throttle ∈ [0, 1] (raw)
@@ -30,8 +32,7 @@ def run_cycle(bng: BeamNGpy, vehicle: Vehicle, rs: RoadsSensor):
     # Speed ∈ [0, 1] (scaled from m/s)
 
     vehicle.control(output[0], output[1], output[2])
-
-    # Resume
+    # Loop
 
 if __name__ == "__main__":
     print("Running agent.py directly.")
@@ -42,7 +43,8 @@ if __name__ == "__main__":
     print("Initializing BeamNG.tech...")
 
     # TODO: Consider replacing this whole block with an initialization function
-    bng = BeamNGpy(host = config["beamng-host"], port = config["beamng-host"], home = config["beamng-path"])
+    bng = BeamNGpy(host = config["beamng-host"], port = config["beamng-port"], home = config["beamng-path"])
+    bng.open()
 
     scenario = Scenario(level = config["scenario-level"], name = config["scenario-name"])
 
@@ -55,18 +57,15 @@ if __name__ == "__main__":
     apply_environment_setup(scenario, vehicle)
 
     scenario.make(bng)
-    bng.set_deterministic(60)
+    bng.settings.set_deterministic(60)
     bng.control.pause()
     bng.scenario.load(scenario)
     bng.scenario.start()
     # Block end
 
     # Initialize roads sensor and attach to vehicle
-    roads = RoadsSensor("roads", bng, config["vehicle-name"])
+    roads = RoadsSensor("roads", bng, vehicle, physics_update_time = 0.1)
+    bng.control.step(180)
 
     while(True):
-        run_cycle()
-
-
-
-    
+        update(bng, vehicle, roads)
