@@ -31,10 +31,16 @@ class Agent():
         self.memory = None # TODO: Implement for RL
         self.trainer = None # TODO: Make a trainer class for reinforcement learning
 
-    def get_state(self, roads: RoadsSensor):
+    def get_state(self, vehicle: Vehicle, roads: RoadsSensor):
+        vehicle.poll_sensors()
         raw_roads_data = roads.poll()
         roads_data = raw_roads_data[0]
-        state = [roads_data["dist2CL"], roads_data["headingAngle"], roads_data["roadRadius"], roads_data["halfWidth"], roads_data["drivability"]]
+        state = [roads_data["dist2CL"],
+                 roads_data["headingAngle"],
+                 roads_data["roadRadius"],
+                 roads_data["halfWidth"] * 2,
+                 roads_data["drivability"],
+                 vehicle.sensors['electrics']['wheelspeed']]
         return state
 
     def get_action(self, state):
@@ -72,11 +78,12 @@ def update(agent: Agent, beamng: BeamNGpy, scenario: Scenario, vehicle: Vehicle,
     beamng.control.step(10)
 
     # Get current state
-    state = agent.get_state(roads)
+    state = agent.get_state(vehicle, roads)
     print(state)
 
     # Get next move from model
     action = agent.get_action(state)
+    action = action[0]
 
     # Execute next move
     vehicle.control(action[0], action[1], action[2])
@@ -112,6 +119,11 @@ def initialize():
     # Initialize roads sensor and attach to vehicle
     roads = RoadsSensor("roads", beamng, vehicle, physics_update_time = 0.1)
     beamng.control.step(180)
+
+    # Drive to start roads sensor
+    for i in range(6):
+        vehicle.control(0, 0.5, 0)
+        beamng.control.step(10)
 
     return beamng, scenario, vehicle, electrics, roads
 
