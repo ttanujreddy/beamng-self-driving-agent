@@ -1,0 +1,20 @@
+{
+    "beamng-host": "localhost",
+    "beamng-port": 64256,
+    "beamng-path": "C:/BeamNG.tech.v0.38.5.0",
+
+    "scenario-level": "hirochi_raceway",
+    "scenario-name": "cs450_environment_test",
+
+    "vehicle-name": "vehicle",
+    "vehicle-model": "sbr",
+
+    "vehicle-pos-x": -408.48,
+    "vehicle-pos-y": 260.23,
+    "vehicle-pos-z": 25.14,
+    
+    "vehicle-rot-x": 0,
+    "vehicle-rot-y": 0,
+    "vehicle-rot-z": -0.2799,
+    "vehicle-rot-w": 0.9600
+}
