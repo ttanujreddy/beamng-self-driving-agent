@@ -3,32 +3,49 @@
 This project collects driving data from BeamNG.tech and trains a simple neural network
 to predict steering, throttle, and brake.
 
-1) REQUIREMENTS
 ----------------
-- Python 3.10+
-- BeamNG.tech
 
-2) INSTALL DEPENDENCIES
+1) REQUIREMENTS
+
+- Python 3.10+ (3.13.7 highly recommended)
+- BeamNG.tech, latest version
+
 -----------------------
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-python -m pip install torch torchvision scikit-learn tqdm plotly jupyter
 
-3) COLLECT TRAINING DATA
+2) DEPENDENCIES
+
+- PyTorch ("torch" in pip)
+- BeamNGpy ("beamngpy" in pip)
+
+No other packages needed.
+
 --------------------------------------
+
+3) USAGE
+
+Start by running the following command:
+
+```
 python collect_data.py --beamng-home "(LOCATION OF BEAM.NG)" --frames 200
+```
 
 Notes:
 - Replace --beamng-home with your actual BeamNG root folder.
 - Output is written to raw_data.csv in this repo folder.
 - Duration largely depends on computer speed.
 
-4) OPTIONAL TRAINING NOTEBOOK
------------------------------
-jupyter notebook training_loop.ipynb
+After that, normalize the data by running `process_data.py`, no command-line parameters needed.
 
-5) COMMON ERRORS & SOLUTIONS
+Then, run `training_loop.ipynb` to train the model.
+- Again, duration of training largely depends on your PC's performance.
+
+Finally, run `agent.py` to test the model in-game. Note that this file uses config.json.
+Please point the config file to your installation of BeamNG.tech, like before.
+
 ----------------------------
+
+4) COMMON ERRORS & SOLUTIONS
+
 No module named beamngpy:
 -> python -m pip install beamngpy==1.35
 
@@ -39,7 +56,9 @@ No BeamNG binary found in BeamNG home:
    OR
    - Bin64/BeamNG.tech.x64.exe
 
-6) WHERE DATA IS SAVED
 ----------------------
+
+5) WHERE DATA IS SAVED
+
 Main collected dataset:
 - raw_data.csv
