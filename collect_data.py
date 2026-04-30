@@ -2,6 +2,10 @@
 Data collection script for the self-driving project.
 Connects to BeamNG, drives the SBR car around Hirochi Raceway with the AI driver,
 logs road sensor and electrics data to raw_data.csv for downstream training.
+
+Author(s): Matt Gallenberger
+Class: CS450-01
+Date: 04/29/26
 """
 
 from beamngpy import BeamNGpy, Vehicle, Scenario

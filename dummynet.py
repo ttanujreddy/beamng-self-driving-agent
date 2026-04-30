@@ -1,4 +1,9 @@
 # Dummy net simulates a finished neural network's calls
+"""
+Author(s): Gregory Larson
+Class: CS450-01
+Date: 04/29/26
+"""
 
 import math
 

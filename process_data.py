@@ -1,3 +1,9 @@
+"""
+Author(s): Matt Gallenberger
+Class: CS450-01
+Date: 04/29/26
+"""
+
 import pandas as pd
 from PIL import Image
 import numpy  as np

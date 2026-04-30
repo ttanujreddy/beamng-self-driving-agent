@@ -1,4 +1,9 @@
-# Author: Santiago Ramirez
+"""
+Author(s): Santiago Ramirez
+Class: CS450-01
+Date: 04/29/26
+"""
+
 import torch
 import torch.nn as nn
 
