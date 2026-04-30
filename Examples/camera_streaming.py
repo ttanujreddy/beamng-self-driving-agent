@@ -1,3 +1,9 @@
+"""
+Author(s): Brendel
+Class: CS450-01
+Date: 04/29/26
+"""
+
 from beamngpy import BeamNGpy, Scenario, Vehicle
 from beamngpy.sensors import Camera
 

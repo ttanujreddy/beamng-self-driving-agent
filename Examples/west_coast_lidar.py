@@ -1,3 +1,9 @@
+"""
+Author(s): Brendel
+Class: CS450-01
+Date: 04/29/26
+"""
+
 import random
 from time import sleep
 
