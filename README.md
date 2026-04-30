@@ -1,5 +1,7 @@
 # CS450-Self-Driving-Agent
 
+###### Version alpha 0.1
+
 This project collects driving data from BeamNG.tech and trains a simple neural network
 to predict steering, throttle, and brake.
 
