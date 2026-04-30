@@ -1,5 +1,5 @@
 """
-Author(s): Nate Fermo
+Author(s): Nathan Fermo
 Class: CS450-01
 Date: 04/29/26
 """
