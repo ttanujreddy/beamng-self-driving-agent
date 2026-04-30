@@ -9,12 +9,5 @@
     "vehicle-name": "vehicle",
     "vehicle-model": "sbr",
 
-    "vehicle-pos-x": -408.48,
-    "vehicle-pos-y": 260.23,
-    "vehicle-pos-z": 25.14,
-    
-    "vehicle-rot-x": 0,
-    "vehicle-rot-y": 0,
-    "vehicle-rot-z": -0.2799,
-    "vehicle-rot-w": 0.9600
+    "model-path": "best_model.pth"
 }
