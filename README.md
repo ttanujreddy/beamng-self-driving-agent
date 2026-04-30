@@ -64,3 +64,21 @@ No BeamNG binary found in BeamNG home:
 
 Main collected dataset:
 - raw_data.csv
+
+-------------------------
+
+6) CONTRIBUTIONS
+
+Group Members:
+- Matthew Gallenberger
+- Brendel Zuniga
+- Gregory Larson
+- Santiago Ramirez
+- Nathan Fermo
+- Abshir Haybe
+- Anthony Krauss
+- Tanuj Reddy Thummala
+
+Contributions to code are listed in the headers of each file.
+Unlisted contributions:
+- Brendel Zuniga: training_loop.ipynb
