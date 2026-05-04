@@ -75,6 +75,16 @@ docs/_build/
 .pybuilder/
 target/
 
+# Data
+raw_data.csv
+processed_data.csv
+
+# Models
+*.pth
+
+# Logs
+*.csv
+
 # Jupyter Notebook
 .ipynb_checkpoints
 
