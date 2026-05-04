@@ -66,6 +66,7 @@ from torch.distributions import Normal
 from beamngpy import BeamNGpy, Scenario, Vehicle
 from beamngpy.sensors import Electrics, RoadsSensor
 
+from environment_task_setup import EGO_POS, EGO_ROT_QUAT
 from environment_task_setup import apply_environment_setup
 from model import DrivingModel
 from rl_reward import compute_reward
@@ -83,7 +84,7 @@ LR = 1e-4
 
 # Maximum number of model actions per episode.  Each step below advances BeamNG
 # by 10 physics ticks.
-MAX_STEPS = 500
+MAX_STEPS = 150
 
 # Number of full episodes to attempt.  Increase this only when BeamNG runs are
 # stable and you have time to train.
@@ -91,7 +92,7 @@ NUM_EPISODES = 50
 
 # Initial log standard deviation for action exploration.  exp(-1.0) is about
 # 0.37, giving moderate exploration around the behavior-cloning action mean.
-LOG_STD_INIT = -1.0
+LOG_STD_INIT = -2.5
 
 # BeamNG physics steps to wait after scenario start before using sensors.
 WARMUP_STEPS = 180
@@ -273,8 +274,12 @@ def reset_episode(beamng: BeamNGpy, vehicle: Vehicle) -> None:
         beamng: Open BeamNGpy connection.
         vehicle: Vehicle being trained.
     """
-    vehicle.recover()
+    vehicle.teleport(pos=EGO_POS, rot_quat=EGO_ROT_QUAT)
+    vehicle.control(steering=0, throttle=0, brake=1)
     beamng.control.step(60)
+
+    vehicle.control(steering=0, throttle=0.4, brake=0)
+    beamng.control.step(20)
 
 def run_episode(beamng: BeamNGpy, vehicle: Vehicle, roads_sensor: RoadsSensor, policy: StochasticPolicy):
     """Run one episode and collect REINFORCE training data.
