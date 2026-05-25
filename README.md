@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://beamng.com/tech/">
+  <a href="https://beamng.tech">
     <img src="assets/beamng-tech-logo.png" alt="BeamNG.tech" width="220"/>
   </a>
 </p>
@@ -27,7 +27,7 @@ This project builds a self-driving car agent for the BeamNG.tech simulator. A sm
 ## Requirements
 
 - Python 3.10+ (3.13.7 recommended)
-- BeamNG.tech — available for Windows (experimentally on Linux) at [beamng.com/tech](https://beamng.com/tech/); a license is required
+- BeamNG.tech — available for Windows (experimentally on Linux) at [beamng.tech](https://beamng.tech/); a license is required
 
 ---
 
@@ -269,7 +269,7 @@ Additional contributions are noted in the headers of each source file.
 
 ## License & Trademark
 
-**BeamNG.tech** is developed and published by BeamNG GmbH. Use of BeamNG.tech requires a valid license obtained from [beamng.com/tech](https://beamng.com/tech/).
+**BeamNG.tech** is developed and published by BeamNG GmbH. Use of BeamNG.tech requires a valid license obtained from [beamng.tech](https://beamng.tech).
 
 The BeamNG.tech name and logo are registered trademarks of BeamNG GmbH. The logo used in this README is reproduced in accordance with the [BeamNG Trademark Usage Guidelines](https://beamng.com/game/support/policies/trademark-guidelines/). The logo has not been altered in any way other than scaling.
 

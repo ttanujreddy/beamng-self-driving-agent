@@ -3,14 +3,6 @@ BEAMNG SELF-DRIVING AGENT
 CS450-01 Final Project - PyTorch Behavior Cloning + Experimental REINFORCE RL
 --------------------------------------------------------------------------------
 
-LOGO
---------------------------------------------------------------------------------
-BeamNG.tech logo used in accordance with BeamNG Trademark Usage Guidelines.
-Download the official logo (PNG/SVG) from the BeamNG Media Kit:
-https://bng.gg/mediakit (01-Logo folder)
-Save as: assets/beamng-tech-logo.png in the repo root.
-Trademark guidelines: https://beamng.com/game/support/policies/trademark-guidelines/
-
 OVERVIEW
 --------------------------------------------------------------------------------
 This project builds a self-driving car agent for the BeamNG.tech simulator.
@@ -42,7 +34,7 @@ REQUIREMENTS
 --------------------------------------------------------------------------------
 Python 3.10+ (3.13.7 recommended)
 BeamNG.tech (latest version) — available for Windows (experimentally on Linux)
-  Download and license: https://beamng.com/tech/
+  Download and license: https://beamng.tech
 
 --------------------------------------------------------------------------------
 INSTALLATION
@@ -258,7 +250,7 @@ Additional contributions are noted in the headers of each source file.
 LICENSE & TRADEMARK
 --------------------------------------------------------------------------------
 BeamNG.tech is developed and published by BeamNG GmbH.
-Use of BeamNG.tech requires a valid license: https://beamng.com/tech/
+Use of BeamNG.tech requires a valid license: https://beamng.tech
 
 The BeamNG.tech name and logo are registered trademarks of BeamNG GmbH.
 The logo is reproduced in accordance with BeamNG Trademark Usage Guidelines:
