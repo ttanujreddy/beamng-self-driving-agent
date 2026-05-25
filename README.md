@@ -1,3 +1,11 @@
+<p align="center">
+  <a href="https://beamng.com/tech/">
+    <img src="assets/beamng-tech-logo.png" alt="BeamNG.tech" width="220"/>
+  </a>
+</p>
+
+---
+
 # BeamNG Self-Driving Agent
 
 > CS450-01 Final Project — PyTorch behavior cloning + experimental REINFORCE fine-tuning in BeamNG.tech
@@ -19,7 +27,7 @@ This project builds a self-driving car agent for the BeamNG.tech simulator. A sm
 ## Requirements
 
 - Python 3.10+ (3.13.7 recommended)
-- BeamNG.tech (latest version)
+- BeamNG.tech — available for Windows (experimentally on Linux) at [beamng.com/tech](https://beamng.com/tech/); a license is required
 
 ---
 
@@ -256,3 +264,13 @@ This is expected. Improvement is real but incremental — the agent learns to ha
 | Tanuj Reddy Thummala | `training_loop.ipynb`,`rl_agent.py`, `rl_reward.py`, `demo_rl_reward.py`, `state_schema.py` |
 
 Additional contributions are noted in the headers of each source file.
+
+---
+
+## License & Trademark
+
+**BeamNG.tech** is developed and published by BeamNG GmbH. Use of BeamNG.tech requires a valid license obtained from [beamng.com/tech](https://beamng.com/tech/).
+
+The BeamNG.tech name and logo are registered trademarks of BeamNG GmbH. The logo used in this README is reproduced in accordance with the [BeamNG Trademark Usage Guidelines](https://beamng.com/game/support/policies/trademark-guidelines/). The logo has not been altered in any way other than scaling.
+
+This project is an independent academic work and is not affiliated with, endorsed by, or sponsored by BeamNG GmbH.
