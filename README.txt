@@ -1,262 +1,370 @@
---------------------------------------------------------------------------------
-BEAMNG SELF-DRIVING AGENT
-CS450-01 Final Project - PyTorch Behavior Cloning + Experimental REINFORCE RL
---------------------------------------------------------------------------------
+================================================================================
+  BEAMNG SELF-DRIVING AGENT
+  CS450-01 Final Project
+  PyTorch Behavior Cloning + Experimental REINFORCE Reinforcement Learning
+================================================================================
 
-OVERVIEW
---------------------------------------------------------------------------------
-This project builds a self-driving car agent for the BeamNG.tech simulator.
-A neural network predicts steering, throttle, and brake from road sensor data.
+CONTENTS
+================================================================================
+  1.  Overview
+  2.  Requirements
+  3.  Installation
+  4.  Pipeline
+      4.1  Step 1 - Collect Training Data
+      4.2  Step 2 - Process the Data
+      4.3  Step 3 - Train the Behavior-Cloning Model
+      4.4  Step 4 - Run the Agent in BeamNG
+  5.  Experimental Reinforcement Learning Extension
+      5.1  Algorithm (REINFORCE)
+      5.2  Reward Design
+  6.  BeamNG-Free Reward Demo
+  7.  File Reference
+  8.  Outputs
+  9.  Common Errors
+  10. Contributions
+  11. License & Trademark
+================================================================================
 
-Main method:
-- Supervised behavior cloning
 
-Extension:
-- Experimental reinforcement learning (REINFORCE)
+================================================================================
+  1. OVERVIEW
+================================================================================
 
-TECH STACK
---------------------------------------------------------------------------------
-Python 3.10+ (3.13.7 recommended)
-PyTorch
-BeamNGpy
-BeamNG.tech (Hirochi Raceway)
+This project uses BeamNG.tech to build a self-driving car agent.
+A small feedforward neural network learns to predict steering, throttle, and
+brake from road sensor and electrics data. The main pipeline uses supervised
+behavior cloning. An experimental reinforcement-learning extension fine-tunes
+the trained model using a REINFORCE-style policy-gradient loop.
 
-STATE VECTOR
---------------------------------------------------------------------------------
-[distFromCenter | headingAngle | curvature | roadWidth | drivability | Speed]
+  Tech stack:     Python 3.10+, PyTorch, BeamNGpy, Hirochi Raceway (BeamNG.tech)
+  State vector:   [distFromCenter, headingAngle, curvature, roadWidth, drivability, Speed]
+  Action vector:  [Steering, Throttle, Brake]
 
-ACTION VECTOR
---------------------------------------------------------------------------------
-[Steering | Throttle | Brake]
+[ Back to Contents: see top ]
 
---------------------------------------------------------------------------------
-REQUIREMENTS
---------------------------------------------------------------------------------
-Python 3.10+ (3.13.7 recommended)
-BeamNG.tech (latest version) — available for Windows (experimentally on Linux)
-  Download and license: https://beamng.tech
 
---------------------------------------------------------------------------------
-INSTALLATION
---------------------------------------------------------------------------------
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-python -m pip install torch torchvision scikit-learn tqdm plotly jupyter
+================================================================================
+  2. REQUIREMENTS
+================================================================================
 
-If BeamNGpy missing:
-python -m pip install beamngpy==1.35
+  - Python 3.10+ (3.13.7 recommended)
+  - BeamNG.tech — available for Windows (experimentally on Linux)
+      Download and license: https://beamng.tech
+  - Python dependencies listed in `requirements.txt`
 
---------------------------------------------------------------------------------
-PIPELINE
---------------------------------------------------------------------------------
+[ Back to Contents: see top ]
 
-STEP 1 - COLLECT DATA
---------------------------------------------------------------------------------
-python collect_data.py --beamng-home "C:/BeamNG.tech.v0.38.5.0" --frames 200
 
-DESCRIPTION:
-BeamNG AI drives the track while sensors log driving data.
+================================================================================
+  3. INSTALLATION OF DEPENDENCIES:
+================================================================================
 
-ARGUMENTS
---------------------------------------------------------------------------------
-| Argument          | Default | Description                          |
-|-------------------|---------|--------------------------------------|
-| beamng-home       | req.    | Path to BeamNG install               |
-| frames            | 30      | Number of frames to collect          |
-| with-obstacles    | off     | Add obstacle cars                    |
-| startup-delay     | 8.0     | Wait before polling sensors          |
-| warmup-polls      | 10      | Sensor warmup cycles                 |
-| ai-mode           | span    | AI mode (span/traffic/random)        |
-| keep-open         | off     | Wait before closing                  |
+  python -m pip install --upgrade pip
+  python -m pip install -r requirements.txt
+  python -m pip install torch torchvision scikit-learn tqdm plotly jupyter
 
-OUTPUT:
-raw_data.csv
+If BeamNGpy is missing:
 
-FORMAT:
-distFromCenter | headingAngle | curvature | roadWidth | drivability | Speed |
-Steering | Throttle | Brake
+  python -m pip install beamngpy==1.35
 
---------------------------------------------------------------------------------
-STEP 2 - PROCESS DATA
---------------------------------------------------------------------------------
-python process_data.py
+[ Back to Contents: see top ]
 
-OPTIONAL:
-python process_data.py --input raw_data.csv --output processed_data.csv
 
-DESCRIPTION:
-- Validates schema
-- Drops missing rows
-- Clips invalid control values
+================================================================================
+  4. PIPELINE
+================================================================================
 
-OUTPUT:
-processed_data.csv
+The pipeline runs in four steps: collect data, process it, train the model,
+then run the agent.
 
 --------------------------------------------------------------------------------
-STEP 3 - TRAIN MODEL
---------------------------------------------------------------------------------
-jupyter notebook training_loop.ipynb
-
-DESCRIPTION:
-- Feedforward network (6 -> 64 -> 32 -> 3)
-- MSE loss
-- 80/10/10 split
-- Early stopping
-
-OUTPUT:
-best_model.pth
-
---------------------------------------------------------------------------------
-STEP 4 - RUN AGENT
---------------------------------------------------------------------------------
-Edit config.json:
-
-{
-  "beamng-path": "C:/BeamNG.tech.v0.38.5.0",
-  "model-path": "best_model.pth"
-}
-
-Run:
-python agent.py
-
-DESCRIPTION:
-Loads model and drives in BeamNG using live sensor data.
-
---------------------------------------------------------------------------------
-REINFORCEMENT LEARNING (EXPERIMENTAL)
+  4.1  STEP 1 - COLLECT TRAINING DATA
 --------------------------------------------------------------------------------
 
-RUN RL:
---------------------------------------------------------------------------------
-python rl_agent.py
+  python collect_data.py --beamng-home "(LOCATION OF BEAMNG.TECH)" --frames 200
 
-OPTIONAL:
-python rl_agent.py --config config.json
-python rl_agent.py --beamng-home "C:/BeamNG.tech.v0.38.5.0"
+  Example:
+  python collect_data.py --beamng-home "C:/BeamNG.tech.v0.38.5.0" --frames 200
 
---------------------------------------------------------------------------------
-ALGORITHM (REINFORCE)
---------------------------------------------------------------------------------
-1. Load best_model.pth
-2. Convert to stochastic Gaussian policy
-3. Run BeamNG episode
-4. Sample actions
-5. Compute reward
-6. Compute discounted return (gamma = 0.99)
-7. Update weights: loss = -log_prob * return
-8. Save model
+  The BeamNG AI drives Hirochi Raceway while road sensor and electrics data
+  are logged.
 
-OUTPUT:
-best_model_rl.pth
+  Arguments:
+  ------------------------------------------------------------------------
+  | Argument          | Default | Description                            |
+  |-------------------|---------|----------------------------------------|
+  | --beamng-home     | req.    | Path to BeamNG.tech install folder     |
+  | --frames          | 30      | Number of frames to collect            |
+  | --with-obstacles  | off     | Add obstacle cars to the scenario      |
+  | --startup-delay   | 8.0     | Seconds to wait before first sensor poll|
+  | --warmup-polls    | 10      | Warmup polls before the capture loop   |
+  | --ai-mode         | span    | BeamNG AI mode: span, traffic, random  |
+  | --keep-open       | off     | Wait for Enter before disconnecting    |
+  ------------------------------------------------------------------------
 
---------------------------------------------------------------------------------
-REWARD DESIGN
---------------------------------------------------------------------------------
-| Signal                    | Effect                               |
-|---------------------------|--------------------------------------|
-| speed * cos(headingAngle) | Reward forward motion                |
-| distance from center      | Penalize lane deviation              |
-| curvature * speed         | Penalize fast turns                  |
-| throttle + brake          | Penalize conflict                    |
-| steering magnitude        | Penalize sharp turns                 |
-| off-road                  | Large penalty + terminate            |
-| stopped                   | Small penalty                        |
+  Output:  raw_data.csv
 
-NOTE:
-REINFORCE is high variance and slow.
-Model improvement is incremental.
-best_model_rl.pth is NOT guaranteed better than best_model.pth.
+  The collected row format is:
+
+    [distFromCenter, headingAngle, curvature, roadWidth, drivability, Speed,
+    Steering, Throttle, Brake]
+
+  The first six values are model inputs. The last three values are control labels.
 
 --------------------------------------------------------------------------------
-REWARD DEMO (NO BEAMNG)
---------------------------------------------------------------------------------
-python demo_rl_reward.py
-
-DESCRIPTION:
-Shows reward outputs for test scenarios.
-
---------------------------------------------------------------------------------
-FILES
---------------------------------------------------------------------------------
-| File                      | Purpose                              |
-|---------------------------|--------------------------------------|
-| collect_data.py           | Collect driving data                 |
-| process_data.py           | Clean dataset                        |
-| training_loop.ipynb       | Train model                          |
-| model.py                  | Neural network definition            |
-| utils.py                  | Dataset wrapper                      |
-| state_schema.py           | Feature/target schema                |
-| agent.py                  | Run trained model                    |
-| rl_reward.py              | Reward function                      |
-| rl_agent.py               | RL training loop                     |
-| demo_rl_reward.py         | Reward demo                          |
-| environment_task_setup.py | Scenario setup                       |
-| reward_logger.py          | Log rewards                          |
-| config.json               | Configuration                        |
-
---------------------------------------------------------------------------------
-OUTPUT FILES
---------------------------------------------------------------------------------
-| File                 | Created by             | Description                |
-|----------------------|------------------------|----------------------------|
-| raw_data.csv         | collect_data.py        | Raw data                   |
-| processed_data.csv   | process_data.py        | Clean data                 |
-| best_model.pth       | training               | Supervised model           |
-| best_model_rl.pth    | rl_agent.py            | RL model (experimental)    |
-
---------------------------------------------------------------------------------
-COMMON ERRORS
+  4.2  STEP 2 - PROCESS THE DATA
 --------------------------------------------------------------------------------
 
-ERROR: No module named beamngpy
-FIX:
-python -m pip install beamngpy==1.35
+  python process_data.py
 
-ERROR: No BeamNG binary found
-FIX:
-Check beamng-home path:
-BeamNG.tech.exe
-or
-Bin64/BeamNG.tech.x64.exe
+  Optional explicit paths:
+  python process_data.py --input raw_data.csv --output processed_data.csv
 
-ERROR: Missing CSV columns
-FIX:
-Re-run collect_data.py
+  Validates the CSV schema, drops rows with missing values, clips impossible
+  control values.
 
-EXPECTED COLUMNS:
-distFromCenter | headingAngle | curvature | roadWidth | drivability | Speed |
-Steering | Throttle | Brake
-
-ERROR: RL training slow
-FIX:
-Normal behavior. RL takes time.
+  Output:  processed_data.csv
 
 --------------------------------------------------------------------------------
-CONTRIBUTIONS
---------------------------------------------------------------------------------
-| Name                       | Contribution                         |
-|----------------------------|--------------------------------------|
-| Matthew Gallenberger       | Data collection + processing         |
-| Brendel Zuniga             | Training + RL                        |
-| Gregory Larson             | Agent                                |
-| Santiago Ramirez           | Model                                |
-| Nathan Fermo               | Environment setup                    |
-| Tanuj Reddy Thummala       | RL + reward system                   |
+  4.3  STEP 3 - TRAIN THE BEHAVIOR-CLONING MODEL
 --------------------------------------------------------------------------------
 
-Additional contributions are noted in the headers of each source file.
+  jupyter notebook training_loop.ipynb
+
+  Trains DrivingModel (6 -> 64 -> 32 -> 3 feedforward network) using MSE loss
+  on recorded controls. Uses an 80/10/10 train/val/test split with early
+  stopping.
+
+  It learns this mapping:
+
+    state = [distFromCenter, headingAngle, curvature, roadWidth, drivability, Speed]
+            ->
+    action = [Steering, Throttle, Brake]
+
+  Output:  best_model.pth
 
 --------------------------------------------------------------------------------
-LICENSE & TRADEMARK
+  4.4  STEP 4 - RUN THE AGENT IN BEAMNG
 --------------------------------------------------------------------------------
-BeamNG.tech is developed and published by BeamNG GmbH.
-Use of BeamNG.tech requires a valid license: https://beamng.tech
 
-The BeamNG.tech name and logo are registered trademarks of BeamNG GmbH.
-The logo is reproduced in accordance with BeamNG Trademark Usage Guidelines:
-https://beamng.com/game/support/policies/trademark-guidelines/
-The logo has not been altered in any way other than scaling.
+  Edit config.json:
+  {
+    "beamng-path": "(LOCATION OF BEAMNG.TECH)",
+    "model-path":  "best_model.pth"
+  }
 
-This project is an independent academic work and is not affiliated with,
-endorsed by, or sponsored by BeamNG GmbH.
+  Then run:
+  python agent.py
+
+  The agent loads the trained model, initializes BeamNG, and drives in a
+  continuous loop using live sensor data.
+
+[ Back to Contents: see top ]
+
+
+================================================================================
+  5. EXPERIMENTAL REINFORCEMENT LEARNING EXTENSION
+================================================================================
+
+After behavior cloning, the RL extension lets the agent improve by acting in
+BeamNG and learning from reward feedback — useful for recovering from states
+not covered by the training dataset.
+
+  python rl_agent.py
+
+  Optional arguments:
+  python rl_agent.py --config config.json
+  python rl_agent.py --beamng-home "(LOCATION OF BEAMNG.TECH)"
+
+  To test the RL model, update config.json and run agent.py as normal:
+    "model-path": "best_model_rl.pth"
+
+  NOTE:
+  REINFORCE is a high-variance Monte Carlo algorithm and training is slow.
+  Limited data means the agent can take several minutes of wall time per
+  behavior learned (e.g. ~6 minutes to learn not to immediately turn into a
+  wall at the start). Improvement is real but incremental: the agent will learn
+  to handle the states it encounters most, but will go off-road further down
+  the track until given more episodes and data. Treat best_model_rl.pth as a
+  work-in-progress candidate rather than a complete replacement for
+  best_model.pth.
+
 --------------------------------------------------------------------------------
+  5.1  ALGORITHM (REINFORCE)
+--------------------------------------------------------------------------------
+
+  1. Load best_model.pth as the starting policy.
+  2. Wrap the deterministic model as a stochastic Gaussian policy.
+  3. Run BeamNG driving episodes.
+  4. Sample actions and record their log probabilities.
+  5. Compute rewards using rl_reward.py.
+  6. Compute discounted returns.
+  7. Update the policy with a REINFORCE-style loss.
+  8. Save the best episode model as best_model_rl.pth.
+
+  Output:  best_model_rl.pth
+
+--------------------------------------------------------------------------------
+  5.2  REWARD DESIGN
+--------------------------------------------------------------------------------
+
+  Rewards:
+    Staying near the lane center.
+    Alignment with the road heading.
+    Maintaining reasonable speed.
+
+  Penalizes:
+    Leaving the road or entering non-drivable areas.
+    Unstable controls such as unnecessary braking or throttle/brake conflict.
+
+[ Back to Contents: see top ]
+
+
+================================================================================
+  6. BEAMNG-FREE REWARD DEMO
+================================================================================
+
+To verify the reward function without BeamNG running:
+
+  python demo_rl_reward.py
+
+This prints reward values for hand-written driving states such as centered, 
+near-road-edge, stopped, and off-road cases. This is useful for explaining the 
+RL reward design without needing the simulator to run live.
+
+[ Back to Contents: see top ]
+
+
+================================================================================
+  7. FILE REFERENCE
+================================================================================
+
+  -------------------------------------------------------------------------
+  | File                      | Purpose                                   |
+  |---------------------------|-------------------------------------------|
+  | collect_data.py           | Runs BeamNG AI, records data to           |
+  |                           | raw_data.csv                              |
+  | process_data.py           | Cleans and validates raw_data.csv,        |
+  |                           | writes processed_data.csv                 |
+  | training_loop.ipynb       | Trains the supervised behavior-cloning    |
+  |                           | model                                     |
+  | model.py                  | Defines DrivingModel, the PyTorch network |
+  | utils.py                  | PyTorch Dataset wrapper for driving rows  |
+  | state_schema.py           | Shared state/action schema and sensor     |
+  |                           | conversion helpers                        |
+  | agent.py                  | Runs a trained model live in BeamNG       |
+  | rl_reward.py              | Shared RL reward function                 |
+  | rl_agent.py               | Experimental REINFORCE fine-tuning loop   |
+  | demo_rl_reward.py         | BeamNG-free reward function demonstration |
+  | environment_task_setup.py | Scenario layout, spawn positions,         |
+  |                           | and obstacle setup                        |
+  | dummynet.py               | Dummy network for testing the control     |
+  |                           | pipeline without a trained model          |
+  | config.json               | BeamNG path, scenario settings,           |
+  |                           | and model path                            |
+  -------------------------------------------------------------------------
+
+[ Back to Contents: see top ]
+
+
+================================================================================
+  8. OUTPUTS
+================================================================================
+
+  -------------------------------------------------------------------------
+  | File                | Created by           | Description              |
+  |---------------------|----------------------|--------------------------|
+  | raw_data.csv        | collect_data.py      | Raw BeamNG driving       |
+  |                     |                      | dataset                  |
+  | processed_data.csv  | process_data.py      | Cleaned dataset for      |
+  |                     |                      | training                 |
+  | best_model.pth      | training_loop.ipynb  | Supervised behavior-     |
+  |                     |                      | cloning model            |
+  | best_model_rl.pth   | rl_agent.py          | Experimental RL          |
+  |                     |                      | fine-tuned candidate     |
+  -------------------------------------------------------------------------
+
+[ Back to Contents: see top ]
+
+
+================================================================================
+  9. COMMON ERRORS
+================================================================================
+
+  ERROR: No module named beamngpy
+  FIX:
+    python -m pip install beamngpy==1.35
+
+  -------------------------------------------------------------------------
+
+  ERROR: No BeamNG binary found in BeamNG home
+  FIX:
+    Your --beamng-home path is wrong. It must point to the BeamNG.tech
+    install root containing one of:
+      BeamNG.tech.exe
+      Bin64/BeamNG.tech.x64.exe
+
+  -------------------------------------------------------------------------
+
+  ERROR: raw_data.csv is missing columns
+  FIX:
+    Collect data using the current collect_data.py. Expected columns:
+      distFromCenter, headingAngle, curvature, roadWidth, drivability,
+      Speed, Steering, Throttle, Brake
+
+  -------------------------------------------------------------------------
+
+  ERROR: RL training is very slow
+  FIX:
+    This is expected. Improvement is real but incremental — the agent
+    learns to handle states it encounters frequently, but with limited
+    training data it can take several minutes per behavior learned.
+    Running more episodes and collecting more driving data will extend
+    how far down the track the agent can drive reliably. For a quick
+    demo, best_model.pth from behavior cloning is the faster path.
+
+[ Back to Contents: see top ]
+
+
+================================================================================
+  10. CONTRIBUTIONS
+================================================================================
+
+  -------------------------------------------------------------------------
+  | Member                  | Contributions                               |
+  |-------------------------|---------------------------------------------|
+  | Matthew Gallenberger    | collect_data.py, process_data.py,           |
+  |                         | state_schema.py                             |
+  | Brendel Zuniga          | training_loop.ipynb, rl_agent.py,           |
+  |                         | state_schema.py                             |
+  | Gregory Larson          | agent.py, dummynet.py, state_schema.py      |
+  | Santiago Ramirez        | model.py                                    |
+  | Nathan Fermo            | environment_task_setup.py                   |
+  | Tanuj Reddy Thummala    | training_loop.ipynb, rl_agent.py,           |
+  |                         | rl_reward.py, demo_rl_reward.py,            |
+  |                         | state_schema.py                             |
+  -------------------------------------------------------------------------
+
+  Additional contributions are noted in the headers of each source file.
+
+[ Back to Contents: see top ]
+
+
+================================================================================
+  11. LICENSE & TRADEMARK
+================================================================================
+
+  BeamNG.tech is developed and published by BeamNG GmbH.
+  Use of BeamNG.tech requires a valid license: https://beamng.tech
+
+  The BeamNG.tech name and logo are registered trademarks of BeamNG GmbH.
+  The logo is reproduced in accordance with BeamNG Trademark Usage Guidelines:
+  https://beamng.com/game/support/policies/trademark-guidelines/
+  The logo has not been altered in any way other than scaling.
+
+  This project is an independent academic work and is not affiliated with,
+  endorsed by, or sponsored by BeamNG GmbH.
+
+[ Back to Contents: see top ]
+
+================================================================================
