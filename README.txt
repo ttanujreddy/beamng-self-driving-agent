@@ -56,12 +56,11 @@ the trained model using a REINFORCE-style policy-gradient loop.
 
 
 ================================================================================
-  3. INSTALLATION OF DEPENDENCIES:
+  3. INSTALLATION
 ================================================================================
 
   python -m pip install --upgrade pip
   python -m pip install -r requirements.txt
-  python -m pip install torch torchvision scikit-learn tqdm plotly jupyter
 
 If BeamNGpy is missing:
 

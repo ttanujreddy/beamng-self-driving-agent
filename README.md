@@ -13,7 +13,7 @@
 
 - [Overview](#overview)
 - [Requirements](#requirements)
-- [Installation](#installation-of-dependencies)
+- [Installation](#installation)
 - [Pipeline](#pipeline)
   - [Step 1 — Collect Training Data](#step-1--collect-training-data)
   - [Step 2 — Process the Data](#step-2--process-the-data)
@@ -55,12 +55,11 @@ This project uses BeamNG.tech to build a self-driving car agent. A small feedfor
 
 ---
 
-## Installation of dependencies:
+## Installation
 
 ```bash
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python -m pip install torch torchvision scikit-learn tqdm plotly jupyter
 ```
 
 If BeamNGpy is missing:
