@@ -347,6 +347,12 @@ RL reward design without needing the simulator to run live.
 
   Additional contributions are noted in the headers of each source file.
 
+  Unlisted contributions:
+    
+    Abshir Haybe: `rl_agent.py`, `state_schema.py`
+
+    Anthony Krauss: `rl_reward.py`, `demo_rl_reward.py`
+
 [ Back to Contents: see top ]
 
 

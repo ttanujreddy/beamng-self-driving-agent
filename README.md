@@ -328,6 +328,13 @@ This is expected. Improvement is real but incremental — the agent learns to ha
 
 Additional contributions are noted in the headers of each source file.
 
+Unlisted contributions:
+
+- Abshir Haybe: `rl_agent.py`, `state_schema.py`
+
+- Anthony Krauss: `rl_reward.py`, `demo_rl_reward.py`
+
+
 <p align="right"><a href="#table-of-contents">↑ Back to top</a></p>
 
 ---
