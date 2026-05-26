@@ -189,6 +189,13 @@ class StochasticPolicy(nn.Module):
         std = torch.exp(self.log_std).clamp(min=1e-4)
         dist = Normal(mean, std)
 
+        # TODO/Future improvement:
+        # The log probability is computed from the raw sampled action, while the action
+        # sent to BeamNG is clipped to valid control ranges. This makes the REINFORCE
+        # update an approximation because the logged action and executed action can differ.
+        # A more correct implementation would use a squashed distribution with proper
+        # log-prob correction, or compute the log probability for the exact bounded
+        # action sent to the simulator.
         raw_action = dist.sample()
         log_prob = dist.log_prob(raw_action).sum(dim=-1)
 
