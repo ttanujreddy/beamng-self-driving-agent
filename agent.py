@@ -7,12 +7,15 @@ Class: CS450-01
 Date: 04/29/26
 """
 
+import json
+
 import model
 from environment_task_setup import apply_environment_setup
 from beamngpy import BeamNGpy, Vehicle, Scenario
 from beamngpy.sensors import Electrics, RoadsSensor
 from torch import Tensor
-import json
+
+from state_schema import raw_sensors_to_state
 
 class Agent():
     """ Agent class holds the model instance, as well as functions to
@@ -30,39 +33,29 @@ class Agent():
         self.model.load(path)
 
     def get_state(self, vehicle: Vehicle, roads: RoadsSensor):
-        """ Get the state of the vehicle as a list of floats.
+        """Get the vehicle state in the canonical model feature order.
 
-        Returns: a list with 6 values in this order:
-        0 - distance to the center line of the road, in meters;
-        1 - angle between the road centerline and the vehicle's direction in radians;
-        2 - radius of the curvature of the road, in meters;
-        3 - half-width of the road at the front axel, in meters;
-        4 - "drivability number" of the road, lower = country road, higher = highway, etc.;
-        5 - wheel speed in meters per second
+        Returns:
+            A list with six values in this order:
+            [distFromCenter, headingAngle, curvature, roadWidth, drivability, Speed]
         """
 
         # Poll the given parameters
         try:
             vehicle.poll_sensors()
-        except:
-            raise Exception("Electrics sensor poll error")
+        except Exception as exc:
+            raise Exception("Electrics sensor poll error") from exc
+        
         try:
             raw_roads_data = roads.poll()
-        except:
-            raise Exception("Road sensor poll error")
-        
-        if not isinstance(roads_data, dict) or not roads_data:
-            raise Exception("No roads data given, please skip")
+        except Exception as exc:
+            raise Exception("Road sensor poll error") from exc
 
         # Exctract data from the sensors, return as a list
-        roads_data = raw_roads_data[0]
-
-        state = [roads_data.get("dist2CL", 0),
-                 roads_data.get("headingAngle", 0),
-                 roads_data.get("roadRadius", 0),
-                 roads_data.get("halfWidth", 0),
-                 roads_data.get("drivability", 0),
-                 vehicle.sensors["electrics"].get("wheelspeed", 0)]
+        state = raw_sensors_to_state(raw_roads_data, vehicle)
+        if state is None:
+            raise Exception("No usable roads data given, please skip")
+        
         return state
 
     def get_action(self, state):

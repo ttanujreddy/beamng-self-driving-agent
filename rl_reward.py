@@ -72,7 +72,7 @@ DEFAULT_REWARD_CONFIG = RewardConfig()
 def compute_reward(
     state: Iterable[float],
     action: Optional[Iterable[float]] = None,
-    config: RewardConfig = DEFAULT_REWARD_CONFIG,
+    config: Optional[RewardConfig] = None,
 ) -> Tuple[float, bool]:
     """Compute a scalar reward and terminal flag from one driving state.
 
@@ -92,6 +92,9 @@ def compute_reward(
     Raises:
         ValueError: If state does not contain exactly six values.
     """
+    if config is None:
+        config = DEFAULT_REWARD_CONFIG
+    
     values = list(state)
     if len(values) != 6:
         raise ValueError(f"Expected 6 state values, got {len(values)}: {values}")
@@ -132,10 +135,12 @@ def compute_reward(
     action_penalty = 0.0
     if action is not None:
         action_values = list(action)
-        if len(action_values) == 3:
-            steering, throttle, brake = [safe_float(value) for value in action_values]
-            action_penalty += config.throttle_brake_conflict_weight * min(abs(throttle), abs(brake))
-            action_penalty += config.steering_smoothness_weight * abs(steering)
+        if len(action_values) != 3:
+            raise ValueError(f"Expected 3 action values, got {len(action_values)}: {action_values}")
+
+        steering, throttle, brake = [safe_float(value) for value in action_values]
+        action_penalty += config.throttle_brake_conflict_weight * min(abs(throttle), abs(brake))
+        action_penalty += config.steering_smoothness_weight * abs(steering)
 
     reward = forward_reward - center_penalty - curvature_speed_penalty - action_penalty
     return float(reward), False
