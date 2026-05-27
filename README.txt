@@ -330,27 +330,33 @@ RL reward design without needing the simulator to run live.
 ================================================================================
 
   -------------------------------------------------------------------------
-  | Member                  | Contributions                               |
+  | Contributor             | Role / Contributions                        |
   |-------------------------|---------------------------------------------|
-  | Matthew Gallenberger    | collect_data.py, process_data.py,           |
-  |                         | state_schema.py                             |
-  | Brendel Zuniga          | training_loop.ipynb, rl_agent.py,           |
-  |                         | state_schema.py                             |
-  | Gregory Larson          | agent.py, dummynet.py, state_schema.py      |
-  | Santiago Ramirez        | model.py                                    |
-  | Nathan Fermo            | environment_task_setup.py                   |
-  | Tanuj Reddy Thummala    | training_loop.ipynb, rl_agent.py,           |
-  |                         | rl_reward.py, demo_rl_reward.py,            |
-  |                         | state_schema.py                             |
+  | Matthew Gallenberger    | Data collection pipeline, data processing   |
+  |                         | and validation, state schema design         |
+  |-------------------------|---------------------------------------------|
+  | Brendel Zuniga          | Supervised training loop, RL fine-tuning,   |
+  |                         | state schema                                |
+  |-------------------------|---------------------------------------------|
+  | Gregory Larson          | Live agent inference, dummy network for     |
+  |                         | pipeline testing, state schema              |
+  |-------------------------|---------------------------------------------|
+  | Santiago Ramirez        | Neural network architecture                 |
+  |-------------------------|---------------------------------------------|
+  | Nathan Fermo            | BeamNG scenario setup, spawn positions,     |
+  |                         | and obstacle configuration                  |
+  |-------------------------|---------------------------------------------|
+  | Tanuj Reddy Thummala    | Training pipeline, RL fine-tuning, reward   |
+  |                         | design, reward demo, state schema, and      |
+  |                         | documentation                               |
+  |-------------------------|---------------------------------------------|
+  | Anthony Krauss          | Reward function design, BeamNG-free         |
+  |                         | reward demo, and documentation              |
+  |-------------------------|---------------------------------------------|
+  | Abshir Haybe            | RL agent development, state schema          |
   -------------------------------------------------------------------------
 
   Additional contributions are noted in the headers of each source file.
-
-  Unlisted contributions:
-    
-    Abshir Haybe: `rl_agent.py`, `state_schema.py`
-
-    Anthony Krauss: `rl_reward.py`, `demo_rl_reward.py`
 
 [ Back to Contents: see top ]
 

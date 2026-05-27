@@ -316,23 +316,18 @@ This is expected. Improvement is real but incremental — the agent learns to ha
 
 ## Contributions
 
-| Member | Contributions |
+| Contributor | Role / Contributions |
 |---|---|
-| Matthew Gallenberger | `collect_data.py`, `process_data.py`, `state_schema.py` |
-| Brendel Zuniga | `training_loop.ipynb`, `rl_agent.py`, `state_schema.py` |
-| Gregory Larson | `agent.py`, `dummynet.py`, `state_schema.py` |
-| Santiago Ramirez | `model.py` |
-| Nathan Fermo | `environment_task_setup.py` |
-| Tanuj Reddy Thummala | `training_loop.ipynb`, `rl_agent.py`, `rl_reward.py`, `demo_rl_reward.py`, `state_schema.py` |
+| <a href="https://github.com/mattgallenberger"><img src="https://github.com/mattgallenberger.png" width="50" height="50" style="border-radius:50%;"><br>Matthew Gallenberger</a> | Data collection pipeline, data processing and validation, state schema design |
+| <a href="https://github.com/bczuniga"><img src="https://github.com/bczuniga.png" width="50" height="50" style="border-radius:50%;"><br>Brendel Zuniga</a> | Supervised training loop, RL fine-tuning, state schema |
+| <a href="https://github.com/TreasuredWings"><img src="https://github.com/TreasuredWings.png" width="50" height="50" style="border-radius:50%;"><br>Gregory Larson</a> | Live agent inference, dummy network for pipeline testing, state schema |
+| <a href="https://github.com/SantiagoRamzesRamirez"><img src="https://github.com/SantiagoRamzesRamirez.png" width="50" height="50" style="border-radius:50%;"><br>Santiago Ramirez</a> | Neural network architecture |
+| <a href="https://github.com/natefermo"><img src="https://github.com/natefermo.png" width="50" height="50" style="border-radius:50%;"><br>Nathan Fermo</a> | BeamNG scenario setup, spawn positions, and obstacle configuration |
+| <a href="https://github.com/ttanujreddy"><img src="https://github.com/ttanujreddy.png" width="50" height="50" style="border-radius:50%;"><br>Tanuj Reddy Thummala</a> | Training pipeline, RL fine-tuning, reward design, reward demo, state schema, and documentation |
+| <a href="https://github.com/githud-com-eng"><img src="https://github.com/githud-com-eng.png" width="50" height="50" style="border-radius:50%;"><br>Anthony Krauss</a> | Reward function design, BeamNG-free reward demo, and documentation |
+| Abshir Haybe | RL agent development, state schema |
 
 Additional contributions are noted in the headers of each source file.
-
-Unlisted contributions:
-
-- Abshir Haybe: `rl_agent.py`, `state_schema.py`
-
-- Anthony Krauss: `rl_reward.py`, `demo_rl_reward.py`
-
 
 <p align="right"><a href="#table-of-contents">↑ Back to top</a></p>
 
