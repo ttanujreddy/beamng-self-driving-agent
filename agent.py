@@ -51,7 +51,7 @@ class Agent():
         except Exception as exc:
             raise Exception("Road sensor poll error") from exc
 
-        # Exctract data from the sensors, return as a list
+        # Extract data from the sensors, return as a list
         state = raw_sensors_to_state(raw_roads_data, vehicle)
         if state is None:
             raise Exception("No usable roads data given, please skip")
