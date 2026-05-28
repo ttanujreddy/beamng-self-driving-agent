@@ -90,8 +90,8 @@ MAX_STEPS = 150
 # stable and you have time to train.
 NUM_EPISODES = 50
 
-# Initial log standard deviation for action exploration.  exp(-1.0) is about
-# 0.37, giving moderate exploration around the behavior-cloning action mean.
+# Initial log standard deviation for action exploration.  exp(-2.5) is about
+# 0.082, giving small exploration around the behavior-cloning action mean.
 LOG_STD_INIT = -2.5
 
 # BeamNG physics steps to wait after scenario start before using sensors.
